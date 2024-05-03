@@ -220,4 +220,6 @@ TEST_CASE("Decode BSM", "[decoding]") {
     CHECK(parse_result);
     payload_node = ode_payload_query.evaluate_node(output_doc).node();
     CHECK(payload_node);
+    
+    std::cout << out9.str() << std::endl;
 }
