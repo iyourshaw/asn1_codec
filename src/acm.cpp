@@ -1404,13 +1404,13 @@ bool ASN1_Codec::decode_messageframe_data( std::string& data_as_hex, buffer_stru
 
     logger->trace(fnname + ": ASN.1 binary decode successful.");
 
-    if (asn_check_constraints( &asn_DEF_MessageFrame, messageframe, errbuf, &errlen )) {
-        erroross.str("");
-        erroross << "failed ASN.1 constraints check of element " << asn_DEF_MessageFrame.name << ": ";
-        erroross.write( errbuf, errlen );
-        ASN_STRUCT_FREE(asn_DEF_MessageFrame, messageframe);
-        throw Asn1CodecError{ erroross.str() };
-    }
+    // if (asn_check_constraints( &asn_DEF_MessageFrame, messageframe, errbuf, &errlen )) {
+    //     erroross.str("");
+    //     erroross << "failed ASN.1 constraints check of element " << asn_DEF_MessageFrame.name << ": ";
+    //     erroross.write( errbuf, errlen );
+    //     ASN_STRUCT_FREE(asn_DEF_MessageFrame, messageframe);
+    //     throw Asn1CodecError{ erroross.str() };
+    // }
 
     // Encode the Ieee1609Dot2Data ASN.1 C struct into XML, so we can extract out the BSM.
     encode_rval = xer_encode( 
