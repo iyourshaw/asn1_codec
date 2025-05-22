@@ -1279,7 +1279,7 @@ bool ASN1_Codec::decode_1609dot2_data( std::string& data_as_hex, buffer_structur
 
     std::size_t errlen(max_errbuf_size);
 
-    Ieee1609Dot2Data_t *ieee1609data = 0;        // must initialize to 0 according to asn.1 instructions.
+    Ieee1609Dot2_Ieee1609Dot2Data_t *ieee1609data = 0;        // must initialize to 0 according to asn.1 instructions.
 
     logger->trace(fnname + ": starting...");
 
@@ -1290,7 +1290,7 @@ bool ASN1_Codec::decode_1609dot2_data( std::string& data_as_hex, buffer_structur
         throw Asn1CodecError{"failed attempt to decode IEEE 1609.2 hex string: string empty."};
     }
 
-    logger->trace(fnname + ": success extracting " + asn_DEF_Ieee1609Dot2Data.name + " hex string: " + data_as_hex );
+    logger->trace(fnname + ": success extracting " + asn_DEF_Ieee1609Dot2_Ieee1609Dot2Data.name + " hex string: " + data_as_hex );
 
     std::vector<char> byte_buffer;
     if (!hex_to_bytes_(data_as_hex, byte_buffer)) {
@@ -1303,7 +1303,7 @@ bool ASN1_Codec::decode_1609dot2_data( std::string& data_as_hex, buffer_structur
     decode_rval = asn_decode( 
             0, 
             decode_1609dot2_type, 
-            &asn_DEF_Ieee1609Dot2Data, 
+            &asn_DEF_Ieee1609Dot2_Ieee1609Dot2Data,
             (void **)&ieee1609data, 
             byte_buffer.data(), 
             byte_buffer.size() 
@@ -1312,7 +1312,7 @@ bool ASN1_Codec::decode_1609dot2_data( std::string& data_as_hex, buffer_structur
     if ( decode_rval.code != RC_OK ) {
         std::ostringstream erroross;
         erroross.str("");
-        erroross << "failed ASN.1 binary decoding of element " << asn_DEF_Ieee1609Dot2Data.name << ": ";
+        erroross << "failed ASN.1 binary decoding of element " << asn_DEF_Ieee1609Dot2_Ieee1609Dot2Data.name << ": ";
         if ( decode_rval.code == RC_FAIL ) {
             erroross << "bad data.";
         } else {
@@ -1326,25 +1326,25 @@ bool ASN1_Codec::decode_1609dot2_data( std::string& data_as_hex, buffer_structur
 
     // check the data in the returned structure against the ASN.1 specification constraints.
     char errbuf[max_errbuf_size];
-    if (asn_check_constraints( &asn_DEF_Ieee1609Dot2Data, ieee1609data, errbuf, &errlen )) {
+    if (asn_check_constraints( &asn_DEF_Ieee1609Dot2_Ieee1609Dot2Data, ieee1609data, errbuf, &errlen )) {
         std::ostringstream erroross;
         erroross.str("");
-        erroross << "failed ASN.1 constraints check of element " << asn_DEF_Ieee1609Dot2Data.name << ": ";
+        erroross << "failed ASN.1 constraints check of element " << asn_DEF_Ieee1609Dot2_Ieee1609Dot2Data.name << ": ";
         erroross.write( errbuf, errlen );
-        ASN_STRUCT_FREE(asn_DEF_Ieee1609Dot2Data, ieee1609data);
+        ASN_STRUCT_FREE(asn_DEF_Ieee1609Dot2_Ieee1609Dot2Data, ieee1609data);
         throw Asn1CodecError{ erroross.str() };
     }
 
     // target form is always XML (for now).
     encode_rval = xer_encode( 
-            &asn_DEF_Ieee1609Dot2Data, 
+            &asn_DEF_Ieee1609Dot2_Ieee1609Dot2Data,
             ieee1609data, 
             XER_F_CANONICAL, 
             dynamic_buffer_append, 
             static_cast<void *>(xml_buffer) 
             );
 
-    ASN_STRUCT_FREE(asn_DEF_Ieee1609Dot2Data, ieee1609data);
+    ASN_STRUCT_FREE(asn_DEF_Ieee1609Dot2_Ieee1609Dot2Data, ieee1609data);
 
     if ( encode_rval.encoded == -1 ) {
         std::ostringstream erroross;
@@ -1368,7 +1368,7 @@ bool ASN1_Codec::decode_messageframe_data( std::string& data_as_hex, buffer_stru
 
     std::size_t errlen(max_errbuf_size);
 
-    MessageFrame_t *messageframe = 0;           // must be initialized to 0.
+    MessageFrame_MessageFrame_t *messageframe = 0;           // must be initialized to 0.
 
     logger->trace(fnname + ": starting...");
 
@@ -1379,7 +1379,7 @@ bool ASN1_Codec::decode_messageframe_data( std::string& data_as_hex, buffer_stru
         throw Asn1CodecError{"failed attempt to decode MessageFrame hex string: string empty."};
     }
 
-    logger->trace(fnname + ": success extracting " + asn_DEF_MessageFrame.name + " hex string: " + data_as_hex);
+    logger->trace(fnname + ": success extracting " + asn_DEF_MessageFrame_MessageFrame.name + " hex string: " + data_as_hex);
 
     std::vector<char> byte_buffer;
     if (!hex_to_bytes_(data_as_hex, byte_buffer)) {
@@ -1391,7 +1391,7 @@ bool ASN1_Codec::decode_messageframe_data( std::string& data_as_hex, buffer_stru
     decode_rval = asn_decode( 
             0, 
             decode_messageframe_type, 
-            &asn_DEF_MessageFrame,
+            &asn_DEF_MessageFrame_MessageFrame,
             (void **)&messageframe,
             byte_buffer.data(), 
             byte_buffer.size() 
@@ -1400,7 +1400,7 @@ bool ASN1_Codec::decode_messageframe_data( std::string& data_as_hex, buffer_stru
     if ( decode_rval.code != RC_OK ) {
         std::ostringstream erroross;
         erroross.str("");
-        erroross << "failed ASN.1 binary decoding of element " << asn_DEF_MessageFrame.name << ": ";
+        erroross << "failed ASN.1 binary decoding of element " << asn_DEF_MessageFrame_MessageFrame.name << ": ";
         if ( decode_rval.code == RC_FAIL ) {
             erroross << "bad data.";
         } else {
@@ -1413,25 +1413,25 @@ bool ASN1_Codec::decode_messageframe_data( std::string& data_as_hex, buffer_stru
     logger->trace(fnname + ": ASN.1 binary decode successful.");
 
     char errbuf[max_errbuf_size];
-    if (asn_check_constraints( &asn_DEF_MessageFrame, messageframe, errbuf, &errlen )) {
+    if (asn_check_constraints( &asn_DEF_MessageFrame_MessageFrame, messageframe, errbuf, &errlen )) {
         std::ostringstream erroross;
         erroross.str("");
-        erroross << "failed ASN.1 constraints check of element " << asn_DEF_MessageFrame.name << ": ";
+        erroross << "failed ASN.1 constraints check of element " << asn_DEF_MessageFrame_MessageFrame.name << ": ";
         erroross.write( errbuf, errlen );
-        ASN_STRUCT_FREE(asn_DEF_MessageFrame, messageframe);
+        ASN_STRUCT_FREE(asn_DEF_MessageFrame_MessageFrame, messageframe);
         throw Asn1CodecError{ erroross.str() };
     }
 
     // Encode the Ieee1609Dot2Data ASN.1 C struct into XML, so we can extract out the BSM.
     encode_rval = xer_encode( 
-            &asn_DEF_MessageFrame, 
+            &asn_DEF_MessageFrame_MessageFrame,
             messageframe, 
             XER_F_CANONICAL, 
             dynamic_buffer_append, 
             static_cast<void *>(xml_buffer) 
             );
 
-    ASN_STRUCT_FREE(asn_DEF_MessageFrame, messageframe);
+    ASN_STRUCT_FREE(asn_DEF_MessageFrame_MessageFrame, messageframe);
 
     if ( encode_rval.encoded == -1 ) {
         std::ostringstream erroross;
@@ -1458,7 +1458,7 @@ void ASN1_Codec::encode_frame_data(const std::string& data_as_xml, std::string& 
 
     switch (curr_op_) {
         case J2735MESSAGEFRAME:
-            data_struct = &asn_DEF_MessageFrame;
+            data_struct = &asn_DEF_MessageFrame_MessageFrame;
 
             // check that data conforms to the J2735 2020 standard
             if ( !j2735_2020_conformance_check( data_as_xml ) ) {
@@ -1467,11 +1467,11 @@ void ASN1_Codec::encode_frame_data(const std::string& data_as_xml, std::string& 
 
             break;
         case IEEE1609DOT2:
-            data_struct = &asn_DEF_Ieee1609Dot2Data;
+            data_struct = &asn_DEF_Ieee1609Dot2_Ieee1609Dot2Data;
 
             break;
         case ASDFRAME:
-            data_struct = &asn_DEF_AdvisorySituationData;
+            data_struct = &asn_DEF_SEMI_AdvisorySituationData;
 
             break;
         default:

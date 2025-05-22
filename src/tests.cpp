@@ -325,9 +325,9 @@ void test_encode_VehicleEventFlags_to_uper(const uint16_t bitstring, const uint8
     uint8_t *ptr_buf = (uint8_t *)&buf;
     const int bits_unused = __builtin_ctz(bitstring);
     asn_struct_ctx_t asn_ctx = {};
-    VehicleEventFlags_t vef = {ptr_buf, size, bits_unused, asn_ctx};
-    VehicleEventFlags_t* ptr_vef = &vef;
-    asn_TYPE_descriptor_t *vef_type = &asn_DEF_VehicleEventFlags;
+    Common_VehicleEventFlags_t vef = {ptr_buf, size, bits_unused, asn_ctx};
+    Common_VehicleEventFlags_t* ptr_vef = &vef;
+    asn_TYPE_descriptor_t *vef_type = &asn_DEF_Common_VehicleEventFlags;
     asn_encode_to_new_buffer_result_t res
         = asn_encode_to_new_buffer(0, ATS_UNALIGNED_BASIC_PER, vef_type, ptr_vef);
     if (res.buffer) {
@@ -350,9 +350,9 @@ void test_encode_VehicleEventFlags_to_uper(const uint16_t bitstring, const uint8
 void test_decode_VehicleEventFlags_from_uper(const uint8_t * uper, const ssize_t uper_len, const uint16_t expected_bitstring,
     const int expect_constraint_to_fail) {
     print_bits(uper, uper_len);
-    VehicleEventFlags_t * ptr_vef = 0;
+    Common_VehicleEventFlags_t * ptr_vef = 0;
     asn_dec_rval_t rval
-        = asn_decode(0, ATS_UNALIGNED_BASIC_PER, &asn_DEF_VehicleEventFlags, (void **)&ptr_vef, uper, uper_len);
+        = asn_decode(0, ATS_UNALIGNED_BASIC_PER, &asn_DEF_Common_VehicleEventFlags, (void **)&ptr_vef, uper, uper_len);
     if (rval.code != RC_OK) {
         FAIL("Error decoding");
         return;
@@ -374,31 +374,31 @@ void test_decode_VehicleEventFlags_from_uper(const uint8_t * uper, const ssize_t
     // Check constraints
     char errbuf[128];
     size_t errlen = sizeof(errbuf);
-    int cons_ret = asn_check_constraints(&asn_DEF_VehicleEventFlags, ptr_vef, errbuf, &errlen);
+    int cons_ret = asn_check_constraints(&asn_DEF_Common_VehicleEventFlags, ptr_vef, errbuf, &errlen);
     if (cons_ret && !expect_constraint_to_fail) {
         fprintf(stderr, "Constraint check failed: %s\n", errbuf);
         FAIL("Unexpected constraint check fail");
     }
 
-    ASN_STRUCT_FREE(asn_DEF_VehicleEventFlags, ptr_vef);
+    ASN_STRUCT_FREE(asn_DEF_Common_VehicleEventFlags, ptr_vef);
 }
 
 /*
  * Data for VehicleEventFlags tests
  */
-constexpr uint16_t bitstring_root = (0x8000 >> VehicleEventFlags_eventHazardLights)
-                                        | (0x8000 >> VehicleEventFlags_eventAirBagDeployment);
+constexpr uint16_t bitstring_root = (0x8000 >> Common_VehicleEventFlags_eventHazardLights)
+                                        | (0x8000 >> Common_VehicleEventFlags_eventAirBagDeployment);
 constexpr uint8_t uper_root[2] = { 0b01000000, 0b00000100 };
 
-constexpr uint16_t bitstring_with_ext = (0x8000 >> VehicleEventFlags_eventHazardLights)
-                                        | (0x8000 >> VehicleEventFlags_eventAirBagDeployment)
-                                        | (0x8000 >> VehicleEventFlags_eventJackKnife);
+constexpr uint16_t bitstring_with_ext = (0x8000 >> Common_VehicleEventFlags_eventHazardLights)
+                                        | (0x8000 >> Common_VehicleEventFlags_eventAirBagDeployment)
+                                        | (0x8000 >> Common_VehicleEventFlags_eventJackKnife);
 
 constexpr uint8_t uper_with_ext[3] = { 0b10000111, 0b01000000, 0b00000110 };
 
-constexpr uint16_t bitstring_15bits = (0x8000 >> VehicleEventFlags_eventHazardLights)
-                                      | (0x8000 >> VehicleEventFlags_eventAirBagDeployment)
-                                      | (0x8000 >> VehicleEventFlags_eventJackKnife)
+constexpr uint16_t bitstring_15bits = (0x8000 >> Common_VehicleEventFlags_eventHazardLights)
+                                      | (0x8000 >> Common_VehicleEventFlags_eventAirBagDeployment)
+                                      | (0x8000 >> Common_VehicleEventFlags_eventJackKnife)
                                       | (0x8000 >> 14);
 constexpr uint8_t uper_15bits[3] = {0b10000111, 0b11000000, 0b00000111 };
 

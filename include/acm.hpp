@@ -61,9 +61,9 @@
  * TODO: Add to docs, if your encoding rules are WRONG, you will get a bad data error -- the data may be good under another set of encoding rules.
  */
 
-#include "MessageFrame.h"
-#include "Ieee1609Dot2Data.h"
-#include "AdvisorySituationData.h"
+#include "MessageFrame_MessageFrame.h"
+#include "Ieee1609Dot2_Ieee1609Dot2Data.h"
+#include "SEMI_AdvisorySituationData.h"
 #include "tool.hpp"
 #include "librdkafka/rdkafkacpp.h"
 #include "pugixml.hpp"
