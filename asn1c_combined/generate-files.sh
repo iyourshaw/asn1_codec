@@ -24,7 +24,7 @@ if [ ! -d "./generated-files/$year" ]; then
     mkdir ./generated-files/$year
 fi
 
-asn1c -fno-include-deps -fcompound-names -fcase-insensitive-filenames -gen-OER -fincludes-quoted -no-gen-JER -pdu=all \
+asn1c -fno-include-deps -fcompound-names-all -gen-OER -fincludes-quoted -no-gen-JER -pdu=all \
     ./scms-asn-files/*.asn \
     ./j2735-asn-files/$year/*.asn \
     ./semi-asn-files/$year/SEMI*.asn \
