@@ -24,12 +24,24 @@ if [ ! -d "./generated-files/$year" ]; then
     mkdir ./generated-files/$year
 fi
 
+
+# Patches to the ASN.1 files aren't needed.
+# If any ASN.1 file edits are needed in the future, do them here.
+
+
+# - Use -fno-included-deps to avoid issue with circular references.
+# - Use -fcase-insensitive-filenames for compiling the 2024 specification to work in case-insensitive filesystems such as
+# Windows WSL.
 asn1c -fno-include-deps -fcompound-names -fcase-insensitive-filenames -gen-OER -fincludes-quoted -no-gen-JER -pdu=all \
     ./scms-asn-files/*.asn \
     ./j2735-asn-files/$year/*.asn \
     ./semi-asn-files/$year/SEMI*.asn \
     -D ./generated-files/$year \
     2>&1 | tee compile.out
+
+
+# C code overrides aren't needed.
+# If any overrides are needed in the future, copy them to the generated code them here.
 
 
 # tar generated files and delete originals
