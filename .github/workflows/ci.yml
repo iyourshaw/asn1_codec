@@ -58,22 +58,8 @@ jobs:
 
       - name: Install pugixml
         run: |
-          git clone https://github.com/vlm/asn1c.git
           git clone https://github.com/zeux/pugixml.git
           cd ./pugixml && mkdir -p build && cd build && cmake .. && make && make install
-        working-directory: ${{ env.working-directory }}
-
-      - name: Build and install asn1c submodule
-        run: |
-          sudo apt-get -y install libtool autoconf
-          cd ./asn1c && aclocal && test -f configure || autoreconf -iv && ./configure && make && make install
-        working-directory: ${{ env.working-directory }}
-
-      - name: Generate ASN.1 API.
-        run: |
-          export LD_LIBRARY_PATH=/usr/local/lib
-          git clone https://github.com/usdot-jpo-ode/scms-asn1.git
-          cd ./asn1c_combined && bash doIt.sh
         working-directory: ${{ env.working-directory }}
 
       - name: Export environment variables
