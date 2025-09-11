@@ -65,7 +65,6 @@ jobs:
       - name: Extract implementation and header files
         run: |
           export LD_LIBRARY_PATH=/usr/local/lib
-          git clone https://github.com/usdot-jpo-ode/scms-asn1.git
           cd ./asn1c_combined && bash doIt.sh
         working-directory: ${{ env.working-directory }}
 
