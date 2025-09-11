@@ -62,7 +62,7 @@ jobs:
           cd ./pugixml && mkdir -p build && cd build && cmake .. && make && make install
         working-directory: ${{ env.working-directory }}
 
-      - name: Generate ASN.1 API.
+      - name: Extract implementation and header files
         run: |
           export LD_LIBRARY_PATH=/usr/local/lib
           git clone https://github.com/usdot-jpo-ode/scms-asn1.git
