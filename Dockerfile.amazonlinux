@@ -19,10 +19,6 @@ RUN dnf --enablerepo=fedora install asio-devel -y
 ADD ./pugixml /asn1_codec/pugixml
 RUN cd /asn1_codec/pugixml && mkdir -p build && cd build && cmake .. && make && make install
 
-# Don't need to build and install asn1c submodule
-# ADD ./asn1_codec/usdot-asn1c /asn1_codec/asn1c
-# RUN cd asn1c && test -f configure || autoreconf -iv && ./configure && make && make install
-
 # Make generated files available to the build & compile example
 RUN export LD_LIBRARY_PATH=/usr/local/lib
 ADD ./asn1c_combined /asn1_codec/asn1c_combined

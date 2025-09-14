@@ -22,6 +22,7 @@ jobs:
           apt update
           apt-get -y install sudo wget curl gnupg lsb-release gcovr unzip gcc-multilib libasan*
           sudo apt-get -y install software-properties-common
+          sudo apt-get -y install libcurl4-openssl-dev
           curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
           sudo add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
           sudo curl -L "https://github.com/docker/compose/releases/download/1.24.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
@@ -57,21 +58,13 @@ jobs:
 
       - name: Install pugixml
         run: |
-          git clone https://github.com/vlm/asn1c.git
           git clone https://github.com/zeux/pugixml.git
           cd ./pugixml && mkdir -p build && cd build && cmake .. && make && make install
         working-directory: ${{ env.working-directory }}
 
-      - name: Build and install asn1c submodule
-        run: |
-          sudo apt-get -y install libtool autoconf
-          cd ./asn1c && aclocal && test -f configure || autoreconf -iv && ./configure && make && make install
-        working-directory: ${{ env.working-directory }}
-
-      - name: Generate ASN.1 API.
+      - name: Extract implementation and header files
         run: |
           export LD_LIBRARY_PATH=/usr/local/lib
-          git clone https://github.com/usdot-jpo-ode/scms-asn1.git
           cd ./asn1c_combined && bash doIt.sh
         working-directory: ${{ env.working-directory }}
 
