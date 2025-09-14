@@ -1,5 +1,18 @@
+# === RUNTIME DEPENDENCIES IMAGE ===
+FROM alpine:3.18 as runtime-deps
+USER root
+WORKDIR /asn1_codec
+VOLUME ["/asn1_codec_share"]
+
+# add runtime dependencies
+RUN apk add --upgrade --no-cache \
+    bash \
+    librdkafka \
+    librdkafka-dev
+
+
 # === BUILDER IMAGE ===
-FROM alpine:3.18 as builder
+FROM runtime-deps as builder
 USER root
 WORKDIR /asn1_codec
 VOLUME ["/asn1_codec_share"]
@@ -9,9 +22,6 @@ RUN apk add --upgrade --no-cache --virtual .build-deps \
     cmake \
     g++ \
     make \
-    bash \
-    librdkafka \
-    librdkafka-dev \
     asio-dev
 
 # Install pugixml
@@ -50,17 +60,12 @@ RUN echo "export CC=gcc" >> ~/.bashrc
 # Build acm.
 RUN mkdir -p /build && cd /build && cmake /asn1_codec && make
 
+
 # === RUNTIME IMAGE ===
-FROM alpine:3.18
+FROM runtime-deps
 USER root
 WORKDIR /asn1_codec
 VOLUME ["/asn1_codec_share"]
-
-# add runtime dependencies
-RUN apk add --upgrade --no-cache \
-    bash \
-    librdkafka \
-    librdkafka-dev
 
 # copy the built files from the builder
 COPY --from=builder /asn1_codec /asn1_codec
