@@ -41,6 +41,8 @@ setup() {
 }
 
 waitForKafkaToCreateTopics() {
+    sleep 1 # give Kafka a moment to start
+
     maxAttempts=100
     attempts=0
     KAFKA_CONTAINER_NAME=$(docker ps --format '{{.Names}}' | grep kafka)
