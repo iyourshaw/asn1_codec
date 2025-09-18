@@ -41,43 +41,68 @@ setup() {
 }
 
 waitForKafkaToCreateTopics() {
-    sleep 1 # give Kafka a moment to start
-
     maxAttempts=100
     attempts=0
-    KAFKA_CONTAINER_NAME=$(docker ps --format '{{.Names}}' | grep kafka)
+
+    # Wait for kafka container to appear and broker to respond
     while true; do
         attempts=$((attempts+1))
-        if [ $(docker ps | grep $KAFKA_CONTAINER_NAME | wc -l) = "0" ]; then
+        KAFKA_CONTAINER_NAME=$(docker ps --format '{{.Names}}' | grep kafka | head -n 1 || true)
+
+        if [ -z "$KAFKA_CONTAINER_NAME" ]; then
+            echo "Kafka container not running yet (attempt $attempts/$maxAttempts)..."
+        else
+            # try a non-interactive topics list to confirm broker is responsive
+            if docker exec "$KAFKA_CONTAINER_NAME" /opt/kafka/bin/kafka-topics.sh --list --zookeeper 172.17.0.1 >/dev/null 2>&1; then
+                echo "Kafka broker responded on container '$KAFKA_CONTAINER_NAME'"
+                break
+            else
+                echo "Kafka container found but broker not yet responding (attempt $attempts/$maxAttempts)..."
+            fi
+        fi
+
+        if [ $attempts -ge $maxAttempts ]; then
+            echo "Kafka did not become ready after $maxAttempts attempts. Exiting."
+            ./stop_kafka.sh
+            exit 1
+        fi
+        sleep 1
+    done
+
+    # Now wait for required topics to be created
+    attempts=0
+    while true; do
+        attempts=$((attempts+1))
+        if [ $(docker ps | grep "$KAFKA_CONTAINER_NAME" | wc -l) = "0" ]; then
             echo "Kafka container '$KAFKA_CONTAINER_NAME' is not running. Exiting."
             ./stop_kafka.sh
             exit 1
         fi
 
-        ltopics=$(docker exec -it $KAFKA_CONTAINER_NAME /opt/kafka/bin/kafka-topics.sh --list --zookeeper 172.17.0.1)
+        ltopics=$(docker exec "$KAFKA_CONTAINER_NAME" /opt/kafka/bin/kafka-topics.sh --list --zookeeper 172.17.0.1 2>/dev/null || true)
         allTopicsCreated=true
-        if [ $(echo $ltopics | grep "topic.Asn1DecoderInput" | wc -l) = "0" ]; then
+        if [ $(echo "$ltopics" | grep "topic.Asn1DecoderInput" | wc -l) = "0" ]; then
             allTopicsCreated=false
-        elif [ $(echo $ltopics | grep "topic.Asn1DecoderOutput" | wc -l) = "0" ]; then
+        elif [ $(echo "$ltopics" | grep "topic.Asn1DecoderOutput" | wc -l) = "0" ]; then
             allTopicsCreated=false
-        elif [ $(echo $ltopics | grep "topic.Asn1EncoderInput" | wc -l) = "0" ]; then
+        elif [ $(echo "$ltopics" | grep "topic.Asn1EncoderInput" | wc -l) = "0" ]; then
             allTopicsCreated=false
-        elif [ $(echo $ltopics | grep "topic.Asn1EncoderOutput" | wc -l) = "0" ]; then
+        elif [ $(echo "$ltopics" | grep "topic.Asn1EncoderOutput" | wc -l) = "0" ]; then
             allTopicsCreated=false
         fi
-        
+
         if [ $allTopicsCreated = true ]; then
             echo "Kafka has created all required topics"
             break
         fi
-
-        sleep 1
 
         if [ $attempts -ge $maxAttempts ]; then
             echo "Kafka has not created all required topics after $maxAttempts attempts. Exiting."
             ./stop_kafka.sh
             exit 1
         fi
+
+        sleep 1
     done
 }
 
