@@ -53,7 +53,7 @@ waitForKafkaToCreateTopics() {
             echo "Kafka container not running yet (attempt $attempts/$maxAttempts)..."
         else
             # try a non-interactive topics list to confirm broker is responsive
-            if docker exec "$KAFKA_CONTAINER_NAME" /opt/kafka/bin/kafka-topics.sh --list --zookeeper 172.17.0.1 >/dev/null 2>&1; then
+            if docker exec "$KAFKA_CONTAINER_NAME" /opt/kafka/bin/kafka-topics.sh --list --zookeeper $DOCKER_HOST_IP >/dev/null 2>&1; then
                 echo "Kafka broker responded on container '$KAFKA_CONTAINER_NAME'"
                 break
             else
@@ -79,7 +79,7 @@ waitForKafkaToCreateTopics() {
             exit 1
         fi
 
-        ltopics=$(docker exec "$KAFKA_CONTAINER_NAME" /opt/kafka/bin/kafka-topics.sh --list --zookeeper 172.17.0.1 2>/dev/null || true)
+        ltopics=$(docker exec "$KAFKA_CONTAINER_NAME" /opt/kafka/bin/kafka-topics.sh --list --zookeeper $DOCKER_HOST_IP 2>/dev/null || true)
         allTopicsCreated=true
         if [ $(echo "$ltopics" | grep "topic.Asn1DecoderInput" | wc -l) = "0" ]; then
             allTopicsCreated=false
