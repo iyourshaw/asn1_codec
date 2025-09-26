@@ -1,15 +1,26 @@
-# === BUILDER IMAGE for ACM ===
-FROM amazonlinux:2023 as builder
+# === RUNTIME DEPENDENCIES IMAGE ===
+FROM amazonlinux:2023 as runtime-deps
 USER root
 WORKDIR /asn1_codec
-## add build dependencies
-RUN yum install -y cmake g++ make bash automake libtool autoconf
+VOLUME ["/asn1_codec_share"]
+
+# # add runtime dependencies
+RUN yum install -y bash
 
 # Install librdkafka from Confluent repo
 RUN rpm --import https://packages.confluent.io/rpm/7.6/archive.key
 COPY ./confluent.repo /etc/yum.repos.d
 RUN yum clean all
 RUN yum install -y librdkafka-devel
+
+
+# === BUILDER IMAGE for ACM ===
+FROM runtime-deps as builder
+USER root
+WORKDIR /asn1_codec
+
+## add build dependencies
+RUN yum install -y cmake g++ make bash automake libtool autoconf
 
 # Install asio from Fedora repo (build dependency only)
 COPY ./fedora.repo /etc/yum.repos.d
@@ -46,21 +57,11 @@ ADD ./data /asn1_codec/data
 RUN mkdir -p /build && cd /build && cmake /asn1_codec && make
 
 
-
 # === RUNTIME IMAGE ===
-FROM amazonlinux:2023
+FROM runtime-deps
 USER root
 WORKDIR /asn1_codec
 VOLUME ["/asn1_codec_share"]
-
-# # add runtime dependencies
-RUN yum install -y bash
-
-# Install librdkafka from Confluent repo
-RUN rpm --import https://packages.confluent.io/rpm/7.6/archive.key
-COPY ./confluent.repo /etc/yum.repos.d
-RUN yum clean all
-RUN yum install -y librdkafka-devel
 
 # # copy the built files from the builder
 COPY --from=builder /asn1_codec /asn1_codec
