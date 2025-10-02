@@ -11,6 +11,9 @@ Enhancements in this release:
 - [CDOT PR 48](https://github.com/CDOT-CV/asn1_codec/pull/48): Cleanup Dockerfiles by removing unused asn1c instructions and comments
 - [CDOT PR 49](https://github.com/CDOT-CV/asn1_codec/pull/49): Optimize Docker build by introducing shared runtime-deps stage
 - [CDOT PR 44](https://github.com/CDOT-CV/asn1_codec/pull/44): Add Unit Test for SDSM Data Decoding
+- [USDOT PR 70](https://github.com/usdot-jpo-ode/asn1_codec/pull/70): Add Workflow for External Issues Notification
+- [USDOT PR 71](https://github.com/usdot-jpo-ode/asn1_codec/pull/71): Migrate to Reusable Docker Workflows
+- [USDOT PR 72](https://github.com/usdot-jpo-ode/asn1_codec/pull/72): Fix the Docker organization repository
 
 
 Version 3.1.0, released May 2025
